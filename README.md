@@ -5,7 +5,7 @@ Simple demonstration of Herb Sutter cppfront <https://github.com/hsutter/cppfron
 ## How to use
 
 ```shell
-# install XMake and a C++20 compiler
+# install Zig toolchain
 > git clone https://github.com/kassane/cppfront-zigbuild.git
 > cd cppfront-zigbuild
 > zig build # to build
