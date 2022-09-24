@@ -57,7 +57,6 @@ fn example_build(b: *std.build.Builder, mode: std.builtin.Mode, target: std.zig.
     example.setBuildMode(mode);
     example.linkLibCpp();
     example.linkLibC();
-    example.install();
 
     return example.run();
 }
