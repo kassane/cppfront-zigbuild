@@ -5,7 +5,8 @@ Simple demonstration of Herb Sutter cppfront <https://github.com/hsutter/cppfron
 ## How to use
 
 ```shell
-# install Zig toolchain
+# requires: Zig toolchain
+
 > git clone https://github.com/kassane/cppfront-zigbuild.git
 > cd cppfront-zigbuild
 > zig build # to build
