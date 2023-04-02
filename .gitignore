@@ -32,4 +32,4 @@
 *.app
 
 zig-*
-example/*.cpp
+examples/*.cpp

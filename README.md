@@ -4,12 +4,11 @@ Simple demonstration of Herb Sutter cppfront <https://github.com/hsutter/cppfron
 
 ## How to use
 
-```shell
+```bash
 # requires: Zig toolchain
 
-> git clone https://github.com/kassane/cppfront-zigbuild.git
+> git clone --recursive https://github.com/kassane/cppfront-zigbuild.git
 > cd cppfront-zigbuild
-> zig build # to build
 > zig build cppfront # to run the cppfront and generate example/hello.cpp
-> zig build hello_cpp # to run C++ example
+> zig build run # to run C++ example
 ``` 

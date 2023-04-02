@@ -1,6 +1,6 @@
 name: CI
 
-on: [push, pull_request]
+on: push
 
 jobs:
   test:
@@ -11,15 +11,15 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
-      - uses: goto-bus-stop/setup-zig@v1
+      - uses: goto-bus-stop/setup-zig@v2
         with:
           version: master
 
-      - name: build
-        run: zig build
+      - name: Build
+        run: zig build -fsummary
       
-      - name: run cppfront
+      - name: build and run cppfront
         run: zig build cppfront
 
       - name: run C++ example
-        run: zig build hello_cpp
+        run: zig build run

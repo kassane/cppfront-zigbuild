@@ -1,3 +1,4 @@
+
 main: () -> int = {
     std::cout << "Hello " << name() << "\n";
 }
