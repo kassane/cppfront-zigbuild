@@ -35,7 +35,7 @@ fn cpp2cpp1(b: *std.Build, optimize: std.builtin.Mode, target: std.zig.CrossTarg
         .optimize = optimize,
     });
     exe.disable_sanitize_c = true;
-    exe.addCSourceFile("vendor/cppfront/source/cppfront.cpp", cflags);
+    exe.addCSourceFile(.{ .file = .{ .path = "vendor/cppfront/source/cppfront.cpp" }, .flags = cflags });
     exe.linkLibCpp();
     b.installArtifact(exe);
 
@@ -65,8 +65,8 @@ fn example_build(b: *std.Build, mode: std.builtin.Mode, target: std.zig.CrossTar
     example.disable_sanitize_c = true;
     if (target.isWindows())
         example.want_lto = false;
-    example.addCSourceFile(info.file, cflags);
-    example.addIncludePath("vendor/cppfront/include");
+    example.addCSourceFile(.{ .file = .{ .path = info.file }, .flags = cflags });
+    example.addIncludePath(.{ .path = "vendor/cppfront/include" });
     example.linkLibCpp();
     // b.installArtifact(example);
 
