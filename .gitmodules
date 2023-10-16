@@ -1,3 +1,0 @@
-[submodule "vendor/cppfront"]
-	path = vendor/cppfront
-	url = https://github.com/hsutter/cppfront

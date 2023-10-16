@@ -1,0 +1,11 @@
+.{
+    .name = "cppfront",
+    .version = "0.3.0",
+    .paths = .{""},
+    .dependencies = .{
+        .cppfront = .{
+            .url = "git+https://github.com/hsutter/cppfront#789cd382ed4c2fb1a9e306e73b6876228d22207d",
+            .hash = "12203cb08423d09f50ac9e7caedaed9913ed61d1088ed1c05b1dde39d1de53c39ffa",
+        },
+    },
+}
