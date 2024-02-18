@@ -12,10 +12,12 @@ pub fn build(b: *std.Build) void {
     const cpp2file = b.option([]const u8, "cpp2", "Input - Cpp2 Source file") orelse "examples/pure2-hello.cpp2";
     const cpp2pure = b.option(bool, "pure", "Allow Cpp2 syntax only [default: false]") orelse false;
 
-    const cppfront = cpp2cpp1(b, target, .{
+    const cppfront = cpp2cpp1(b, .{
         .file = cpp2file,
         .pure = cpp2pure,
         .dependency = cppfront_dep,
+        .target = target,
+        .optimize = optimize,
     });
     const cpp2_step = b.step("cppfront", "Run cppfront build (cpp2 -> cpp1)");
     cpp2_step.dependOn(&cppfront.step);
@@ -29,19 +31,19 @@ pub fn build(b: *std.Build) void {
 }
 
 // convert cpp2 to cpp
-fn cpp2cpp1(b: *std.Build, target: std.zig.CrossTarget, config: cpp2Config) *std.build.Step.Run {
+fn cpp2cpp1(b: *std.Build, config: cpp2Config) *std.Build.Step.Run {
     const exe = b.addExecutable(.{
         .name = "cppfront",
-        .target = target,
-        .optimize = .ReleaseSafe,
+        .target = config.target,
+        .optimize = config.optimize,
     });
-    exe.disable_sanitize_c = true;
+    exe.root_module.sanitize_c = false;
 
     exe.addCSourceFile(.{
         .file = config.dependency.path("source/cppfront.cpp"),
         .flags = cflags,
     });
-    if (target.getAbi() != .msvc)
+    if (exe.rootModuleTarget().abi != .msvc)
         exe.linkLibCpp()
     else
         exe.linkLibC();
@@ -64,6 +66,8 @@ const cpp2Config = struct {
     file: []const u8,
     pure: bool,
     dependency: *std.Build.Dependency,
+    optimize: std.builtin.OptimizeMode,
+    target: std.Build.ResolvedTarget,
 };
 fn example_build(b: *std.Build, info: BuildInfo) void {
     const example = b.addExecutable(.{
@@ -71,15 +75,15 @@ fn example_build(b: *std.Build, info: BuildInfo) void {
         .target = info.target,
         .optimize = info.optimize,
     });
-    example.disable_sanitize_c = true;
-    if (info.target.isWindows())
+    example.root_module.sanitize_c = false;
+    if (example.rootModuleTarget().os.tag == .windows)
         example.want_lto = false;
     example.addCSourceFile(.{
         .file = .{ .path = b.fmt("examples/{s}.cpp", .{info.filename()}) },
         .flags = cflags,
     });
     example.addIncludePath(info.dependency.path("include"));
-    if (info.target.getAbi() != .msvc)
+    if (example.rootModuleTarget().abi != .msvc)
         example.linkLibCpp()
     else
         example.linkLibC();
@@ -96,7 +100,7 @@ fn example_build(b: *std.Build, info: BuildInfo) void {
 const BuildInfo = struct {
     file: []const u8,
     optimize: std.builtin.OptimizeMode,
-    target: std.zig.CrossTarget,
+    target: std.Build.ResolvedTarget,
     dependency: *std.Build.Dependency,
     pub fn filename(self: BuildInfo) []const u8 {
         var split = std.mem.split(u8, std.fs.path.basename(self.file), ".");
