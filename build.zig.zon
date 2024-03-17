@@ -4,8 +4,8 @@
     .paths = .{""},
     .dependencies = .{
         .cppfront = .{
-            .url = "git+https://github.com/hsutter/cppfront#e547d1f169f14e01642fb524cd7361d034f1a74b",
-            .hash = "122071b0539d3e469a801c8c4e3220a81f4348e13dc831f5f4c18d887079c63d31a2",
+            .url = "git+https://github.com/hsutter/cppfront#v0.7.0",
+            .hash = "1220697e318a0507ca1000ad1d4409330d38b8af18aac78280924acaaa6edce4425a",
         },
     },
 }
