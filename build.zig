@@ -4,10 +4,7 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    const cppfront_dep = b.dependency("cppfront", .{
-        .target = target,
-        .optimize = optimize,
-    });
+    const cppfront_dep = b.dependency("cppfront", .{});
 
     const cpp2file = b.option([]const u8, "cpp2", "Input - Cpp2 Source file") orelse "examples/pure2-hello.cpp2";
     const cpp2pure = b.option(bool, "pure", "Allow Cpp2 syntax only [default: false]") orelse false;
@@ -37,10 +34,10 @@ fn cpp2cpp1(b: *std.Build, config: cpp2Config) *std.Build.Step.Run {
         .target = config.target,
         .optimize = config.optimize,
     });
-    exe.root_module.sanitize_c = false;
 
-    exe.addCSourceFile(.{
-        .file = config.dependency.path("source/cppfront.cpp"),
+    exe.addCSourceFiles(.{
+        .root = config.dependency.path(""),
+        .files = &.{"source/cppfront.cpp"},
         .flags = cflags,
     });
     if (exe.rootModuleTarget().abi != .msvc)
@@ -49,18 +46,21 @@ fn cpp2cpp1(b: *std.Build, config: cpp2Config) *std.Build.Step.Run {
         exe.linkLibC();
     b.installArtifact(exe);
 
-    const cppfront = b.pathJoin(&.{ b.install_prefix, "bin/cppfront" });
-    const cmds: []const []const u8 = if (config.pure) &.{
-        cppfront,
-        "-p",
+    const cppfront = b.pathJoin(&.{ b.install_prefix, "bin", "cppfront" });
+    var cppfront_exec = b.addSystemCommand(&.{cppfront});
+    if (config.pure)
+        cppfront_exec.addArg("-p");
+    if (b.verbose)
+        cppfront_exec.addArg("-verb");
+
+    cppfront_exec.addArgs(&.{
         config.file,
-    } else &.{
-        cppfront,
-        config.file,
-    };
-    const cmd = b.addSystemCommand(cmds);
-    cmd.step.dependOn(b.getInstallStep());
-    return cmd;
+        "-o",
+        config.file[0 .. config.file.len - 1], // rename cpp2 to cpp
+    });
+
+    cppfront_exec.step.dependOn(b.getInstallStep());
+    return cppfront_exec;
 }
 const cpp2Config = struct {
     file: []const u8,
@@ -79,7 +79,7 @@ fn example_build(b: *std.Build, info: BuildInfo) void {
     if (example.rootModuleTarget().os.tag == .windows)
         example.want_lto = false;
     example.addCSourceFile(.{
-        .file = .{ .path = b.fmt("examples/{s}.cpp", .{info.filename()}) },
+        .file = b.path(b.fmt("examples/{s}.cpp", .{info.filename()})),
         .flags = cflags,
     });
     example.addIncludePath(info.dependency.path("include"));
@@ -103,7 +103,7 @@ const BuildInfo = struct {
     target: std.Build.ResolvedTarget,
     dependency: *std.Build.Dependency,
     pub fn filename(self: BuildInfo) []const u8 {
-        var split = std.mem.split(u8, std.fs.path.basename(self.file), ".");
+        var split = std.mem.splitAny(u8, std.fs.path.basename(self.file), ".");
         return split.first();
     }
 };

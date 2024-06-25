@@ -4,7 +4,7 @@ Simple demonstration of Herb Sutter cppfront <https://github.com/hsutter/cppfron
 
 ## Requires
 
-- [zig](https://ziglang.org) v0.12.0 or master (zig fetch get git packages)
+- [zig](https://ziglang.org) v0.13.0 or master
 
 ## How to use
 

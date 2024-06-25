@@ -3,23 +3,34 @@ name: CI
 on: push
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        runs-on: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.runs-on }}
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0
 
-      - uses: goto-bus-stop/setup-zig@v2
+      - uses: mlugg/setup-zig@v1
         with:
           version: master
 
       - name: Build
         run: zig build --summary all
       
-      - name: build and run cppfront
-        run: zig build cppfront
-
-      - name: run C++ example
-        run: zig build run
+      - name: cppfront - cpp2 to cpp1
+        run: |
+          zig build cppfront -Dpure
+          zig build cppfront -Dpure -Dcpp2=examples/pure2-enum.cpp2
+          zig build cppfront -Dpure -Dcpp2=examples/pure2-forward-return.cpp2
+          # zig build cppfront -Dcpp2=examples/mixed-bounds-check.cpp2
+      - name: Run
+        run: |
+          zig build run -Dpure
+          zig build run -Dpure -Dcpp2=examples/pure2-enum.cpp2
+          zig build run -Dpure -Dcpp2=examples/pure2-forward-return.cpp2
+          # zig build run -Dcpp2=examples/mixed-bounds-check.cpp2
