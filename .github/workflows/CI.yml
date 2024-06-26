@@ -25,12 +25,12 @@ jobs:
       - name: cppfront - cpp2 to cpp1
         run: |
           zig build cppfront -Dpure
-          zig build cppfront -Dpure -Dcpp2=examples/pure2-enum.cpp2
-          zig build cppfront -Dpure -Dcpp2=examples/pure2-forward-return.cpp2
-          # zig build cppfront -Dcpp2=examples/mixed-bounds-check.cpp2
+          zig build cppfront -Dpure -Dcpp2="examples/pure2-enum.cpp2"
+          zig build cppfront -Dpure -Dcpp2="examples/pure2-forward-return.cpp2"
+          # zig build cppfront -Dcpp2="examples/mixed-bounds-check.cpp2"
       - name: Run
         run: |
           zig build run -Dpure
-          zig build run -Dpure -Dcpp2=examples/pure2-enum.cpp2
-          zig build run -Dpure -Dcpp2=examples/pure2-forward-return.cpp2
-          # zig build run -Dcpp2=examples/mixed-bounds-check.cpp2
+          zig build run -Dpure -Dcpp2="examples/pure2-enum.cpp2"
+          zig build run -Dpure -Dcpp2="examples/pure2-forward-return.cpp2"
+          # zig build run -Dcpp2="examples/mixed-bounds-check.cpp2"
