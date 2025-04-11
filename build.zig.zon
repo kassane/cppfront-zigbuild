@@ -1,12 +1,13 @@
 .{
-    .name = "cppfront",
+    .name = .cppfront,
     .version = "0.8.0",
     .paths = .{""},
+    .fingerprint = 0xe4d5303072bd9c1e,
     // update: zig fetch --save=cppfront git+https://github.com/hsutter/cppfront (get latest commit)
     .dependencies = .{
         .cppfront = .{
-            .url = "git+https://github.com/hsutter/cppfront#a76e23b74f91ccec68336ddd5f84edb5b5216a7e",
-            .hash = "1220c3acabe8d98bf4d410cd92e71dec16f753971f89980ee36352a76b976a4588ac",
+            .url = "git+https://github.com/hsutter/cppfront#b2d40209e694f74458ffaf15d8b884300fc405cc",
+            .hash = "N-V-__8AAOOTQwIZDNF_u7BLhF0hRE0Ha-bqGEjd5DEg9r4o",
         },
     },
 }
