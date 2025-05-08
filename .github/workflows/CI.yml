@@ -16,8 +16,8 @@ jobs:
           fetch-depth: 0
 
       - uses: mlugg/setup-zig@v2
-        with:
-          version: master
+        # with:
+        #   version: master
 
       - name: Build
         run: zig build --summary all
